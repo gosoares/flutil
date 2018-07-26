@@ -1,0 +1,13 @@
+name: flutil
+author: Gabriel Soares <soaresggm@gmail.com>
+homepage: https://github.com/SoaresGabriel/flutil
+description: Flutter utilities
+version: 0.0.1
+
+environment:
+  sdk: ">=2.0.0-dev.35 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  rxdart: ^0.18.0
