@@ -2,6 +2,7 @@
 .dart_tool/
 .packages
 .pub/
+.flutter-plugins
 build/
 pubspec.lock
 docs/api
