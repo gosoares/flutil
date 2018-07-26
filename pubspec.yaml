@@ -11,3 +11,4 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.18.0
+  connectivity: ^0.3.1
