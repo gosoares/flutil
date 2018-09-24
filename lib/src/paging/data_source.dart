@@ -27,8 +27,9 @@ abstract class DataSource<T> {
   Stream<DataStatus> get dataStatus => _dataStatusSubject.stream;
 
   /// streams the loaded items
-  final BehaviorSubject<List<T>> _itemsSubject = BehaviorSubject<List<T>>(seedValue: <T>[]);
-  Stream<List<T>> get items => _itemsSubject.stream;
+  @protected
+  final BehaviorSubject<List<T>> itemsSubject = BehaviorSubject<List<T>>(seedValue: <T>[]);
+  Stream<List<T>> get items => itemsSubject.stream;
 
   /// whether this data source is valid
   bool _valid = true;
@@ -46,7 +47,7 @@ abstract class DataSource<T> {
 
   /// load first items and adds on items subject
   Future<Null> loadInitial() async {
-    assert(_itemsSubject.value.isEmpty);
+    assert(itemsSubject.value.isEmpty);
     assert(_initialDataStatusSubject.value == DataStatus.ready);
 
     _initialDataStatusSubject.add(DataStatus.loading);
@@ -57,13 +58,13 @@ abstract class DataSource<T> {
       if (items.isEmpty) _finished = true;
 
       if (_valid) {
-        _itemsSubject.add(items);
+        itemsSubject.add(items);
         _initialDataStatusSubject.add(DataStatus.ready);
         _dataStatusSubject.add(DataStatus.ready);
       }
     } on DataLoadException catch (e, s) {
       if (_valid) {
-        _itemsSubject.addError(e, s);
+        itemsSubject.addError(e, s);
         _initialDataStatusSubject.add(DataStatus.error);
         _dataStatusSubject.add(DataStatus.error);
       }
@@ -74,18 +75,18 @@ abstract class DataSource<T> {
   Future<Null> _loadNextPage() async {
     _dataStatusSubject.add(DataStatus.loading);
     try {
-      final items = await loadRangeData(_itemsSubject.value.length, pageSize);
+      final items = await loadRangeData(itemsSubject.value.length, pageSize);
 
       if (items.isEmpty) {
         _finished = true;
       } else if (_valid) {
-        _itemsSubject.add(_itemsSubject.value..addAll(items));
+        itemsSubject.add(itemsSubject.value..addAll(items));
       }
 
       if (_valid) _dataStatusSubject.add(DataStatus.ready);
     } on DataLoadException catch (e, s) {
       if (_valid) {
-        _itemsSubject.addError(e, s);
+        itemsSubject.addError(e, s);
         _dataStatusSubject.add(DataStatus.error);
       }
     }
@@ -102,7 +103,7 @@ abstract class DataSource<T> {
   Future<Null> retry() {
     assert(_dataStatusSubject.value == DataStatus.error);
 
-    if (_itemsSubject.value.isEmpty) {
+    if (itemsSubject.value.isEmpty) {
       return loadInitial();
     } else {
       return _loadNextPage();
@@ -116,6 +117,6 @@ abstract class DataSource<T> {
     _valid = false;
     _initialDataStatusSubject.close();
     _dataStatusSubject.close();
-    _itemsSubject.close();
+    itemsSubject.close();
   }
 }
