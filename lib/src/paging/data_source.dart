@@ -12,23 +12,30 @@ abstract class DataSource<T> {
   final int initialLoadSize;
   final int pageSize;
 
+  /// whether or not this data source loaded all available data
+  final bool autoFinish;
+
   DataSource(
-    this.pageSize, [
+    this.pageSize, {
+    this.autoFinish = true,
     int initialLoadSize,
-  ]) : this.initialLoadSize = initialLoadSize ?? pageSize;
+  }) : this.initialLoadSize = initialLoadSize ?? pageSize;
 
   /// streams the data status: ready, loading or error
   final BehaviorSubject<DataStatus> _initialDataStatusSubject =
       BehaviorSubject<DataStatus>(seedValue: DataStatus.ready);
+
   Stream<DataStatus> get initialDataStatus => _initialDataStatusSubject.stream;
 
   /// streams the data status: ready, loading or error
   final BehaviorSubject<DataStatus> _dataStatusSubject = BehaviorSubject<DataStatus>(seedValue: DataStatus.ready);
+
   Stream<DataStatus> get dataStatus => _dataStatusSubject.stream;
 
   /// streams the loaded items
   @protected
   final BehaviorSubject<List<T>> itemsSubject = BehaviorSubject<List<T>>(seedValue: <T>[]);
+
   Stream<List<T>> get items => itemsSubject.stream;
 
   /// whether this data source is valid
@@ -55,7 +62,7 @@ abstract class DataSource<T> {
     try {
       final items = await loadInitialData(0, initialLoadSize);
 
-      if (items.isEmpty) _finished = true;
+      if (items.isEmpty && autoFinish) finished();
 
       if (_valid) {
         itemsSubject.add(items);
@@ -78,7 +85,7 @@ abstract class DataSource<T> {
       final items = await loadRangeData(itemsSubject.value.length, pageSize);
 
       if (items.isEmpty) {
-        _finished = true;
+        if (autoFinish) finished();
       } else if (_valid) {
         itemsSubject.add(itemsSubject.value..addAll(items));
       }
@@ -108,6 +115,12 @@ abstract class DataSource<T> {
     } else {
       return _loadNextPage();
     }
+  }
+
+  /// set data as finished loading
+  /// after calling this, a call to [loadNextPage] has no effect
+  void finished() {
+    _finished = true;
   }
 
   /// invalidates the data source
