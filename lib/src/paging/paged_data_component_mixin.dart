@@ -58,6 +58,7 @@ abstract class PagedDataComponentMixin<T, DS extends DataSource<T>> {
 
   @mustCallSuper
   void dispose() {
+    _dataSourceSubject.value.invalidate();
     _dataSourceSubject.close();
   }
 }
