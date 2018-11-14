@@ -10,6 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.11.3+17
-  rxdart: ^0.18.1
-  connectivity: ^0.3.1
+  http: ^0.12.0
+  rxdart: ^0.19.0
+  connectivity: ^0.3.2
