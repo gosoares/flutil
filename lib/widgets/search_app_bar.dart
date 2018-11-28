@@ -191,7 +191,7 @@ class _SearchBarState extends State<SearchAppBar> {
             ),
             onSubmitted: (String val) async {
               if (widget.closeOnSubmit) {
-                await Navigator.maybePop(context);
+                //await Navigator.maybePop(context);
               }
 
               if (widget.clearOnSubmit) {
