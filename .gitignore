@@ -8,3 +8,6 @@ pubspec.lock
 docs/api
 .idea
 *.iml
+
+android/
+ios/
