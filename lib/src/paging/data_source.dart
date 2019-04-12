@@ -19,15 +19,15 @@ abstract class DataSource<T> {
 
   /// streams the data status: ready, loading or error
   final BehaviorSubject<DataStatus> _initialDataStatusSubject =
-      BehaviorSubject<DataStatus>(seedValue: DataStatus.ready);
+      BehaviorSubject<DataStatus>.seeded(DataStatus.ready);
   Stream<DataStatus> get initialDataStatus => _initialDataStatusSubject.stream;
 
   /// streams the data status: ready, loading or error
-  final BehaviorSubject<DataStatus> _dataStatusSubject = BehaviorSubject<DataStatus>(seedValue: DataStatus.ready);
+  final BehaviorSubject<DataStatus> _dataStatusSubject = BehaviorSubject<DataStatus>.seeded(DataStatus.ready);
   Stream<DataStatus> get dataStatus => _dataStatusSubject.stream;
 
   /// streams the loaded items
-  final BehaviorSubject<List<T>> _itemsSubject = BehaviorSubject<List<T>>(seedValue: <T>[]);
+  final BehaviorSubject<List<T>> _itemsSubject = BehaviorSubject<List<T>>.seeded(<T>[]);
   Stream<List<T>> get items => _itemsSubject.stream;
 
   /// whether this data source is valid
