@@ -152,7 +152,7 @@ class _SearchBarState extends State<SearchAppBar> {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: widget.title,
-      actions: [_getSearchAction(context)]..addAll(widget.actions),
+      actions: [_getSearchAction(context)]..addAll(widget.actions ?? []),
       bottom: widget.bottom,
     );
   }
