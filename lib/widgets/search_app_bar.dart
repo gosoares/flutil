@@ -205,7 +205,7 @@ class _SearchBarState extends State<SearchAppBar> {
             onChanged: widget.onSearchChanged,
           )),
       actions: !widget.showClearButton
-          ? widget.actions
+          ? widget.actions ?? []
           : <Widget>[
               // Show an icon if clear is not active, so there's no ripple on tap
               IconButton(
@@ -219,7 +219,7 @@ class _SearchBarState extends State<SearchAppBar> {
                           if (widget.submitOnClear) widget.onSubmitted('');
                         })
             ]
-        ..addAll(widget.actions),
+        ..addAll(widget.actions ?? []),
       bottom: widget.bottom,
     );
   }
